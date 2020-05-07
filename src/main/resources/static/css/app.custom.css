@@ -1,0 +1,68 @@
+body{
+    background-color: #efefef;
+}
+
+#nav-top{
+    margin: 30px;
+}
+
+#container-question{
+    width: 95%;
+    background-color: white;
+}
+
+.btn-publish{
+    float: right;
+    margin-bottom: 15px;
+}
+
+.user-img{
+    width: 38px;
+}
+
+#index-description{
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+}
+
+.profile-conf .section{
+    margin: 15px;
+}
+
+.question-menu{
+    color: #999;
+    font-size: 13px;
+}
+
+#reply-input{
+    margin: 10px 0;
+}
+
+#reply-button{
+    float: right;
+}
+
+svg:hover{
+    cursor: pointer;
+    color: blue;
+}
+
+svg.active{
+    color: blue;
+}
+
+.relatedQ{
+    padding-left: 0;
+    font-size: 12px;
+    list-style: none;
+    text-decoration: none;
+    line-height: 20px;
+
+}
+
+.label-info:hover{
+    color: blue;
+    cursor: pointer;
+    white-space:normal;
+}

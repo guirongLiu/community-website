@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel = "stylesheet" href="css/bootstrap.min.css"/>
+    <link rel = "stylesheet" href="css/app.custom.css"/>
+    <script  src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+    <script src="js/bootstrap.min.js" type="application/javascript"></script>
+
+</head>
+<script type="application/javascript">
+    window.onload = function(){
+        //debugger;
+        var closable = window.localStorage.getItem("closable");
+        if(closable == "true"){
+            window.close();
+            window.localStorage.removeItem("closable");
+        }
+    }
+</script>
+<body>
+    <div th:insert="navigation :: nav"></div>
+
+    <div class="container-fluid my-4" id="container-question">
+        <div class="row">
+            <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" >
+                <h2><span class="glyphicon glyphicon-list"></span>Discovery</h2>
+                <hr>
+
+                <div class="media" th:each="question : ${pagination.targets}">
+                    <div class="media-left">
+                        <a href="#">
+                            <img class="media-object img-rounded user-img" id="index-icon" th:src="${question.user.avatarUrl}">
+                        </a>
+                    </div>
+                    <div class="media-body">
+                        <h4 class="media-heading" >
+                            <a th:text="${question.title}" th:href="@{'/question/'+ ${question.id}}"></a>
+                        </h4>
+                        <span th:text="${question.description}"></span><br />
+                        <span id="index-description">
+                            <span th:text="${question.commentCount}"></span> replies,
+                            <span th:text="${question.viewCount}"></span> views,
+                            <span th:text="${#dates.format(question.gmtCreate,'yyyy-MM-dd HH:mm')}"></span></span>
+                    </div>
+                </div>
+
+                <nav class="nav" aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item" th:if="${pagination.showFirstPage}">
+                            <a class="page-link" th:href="@{/(page=1)}" aria-label="First">
+                                <span aria-hidden="true">&lt;&lt;</span>
+                                <span class="sr-only">First</span>
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${pagination.showPrevious}">
+                            <a class="page-link" th:href="@{/(page=${pagination.currentPage-1})}" aria-label="Previous">
+                                <span aria-hidden="true">&lt;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                        <li class="page-item" th:each="page : ${pagination.pages}" th:classappend="${pagination.currentPage==page}?'active':''">
+                            <a class="page-link" th:href="@{/(page=${page})}" th:text = "${page}"></a>
+                        </li>
+
+                        <li class="page-item" th:if="${pagination.showNext}">
+                            <a class="page-link" th:href="@{/(page=${pagination.currentPage+1})}" aria-label="Next">
+                                <span aria-hidden="true">&gt;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                        <li class="page-item" th:if="${pagination.showEndPage}">
+                            <a class="page-link" th:href="@{/(page=${pagination.totalPageNo})}" aria-label="End">
+                                <span aria-hidden="true">&gt;&gt;</span>
+                                <span class="sr-only">End</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
+            </div>
+            <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" >
+                <h3>Hot Topics:</h3>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

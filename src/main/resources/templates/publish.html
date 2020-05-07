@@ -1,0 +1,145 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Getting Started: Serving Web Content</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/app.custom.css"/>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/js/com.custom.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="/editormd/css/editormd.css" />
+    <script src="/editormd/editormd.min.js"></script>
+
+
+</head>
+<body>
+<div th:insert="navigation :: nav"></div>
+
+<div class="container-fluid my-4" id="container-question">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <h2>
+                <svg class="bi bi-file-earmark-plus" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor"
+                     xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 1H4a2 2 0 00-2 2v10a2 2 0 002 2h5v-1H4a1 1 0 01-1-1V3a1 1 0 011-1h5v2.5A1.5 1.5 0 0010.5 6H13v2h1V6L9 1z"/>
+                    <path fill-rule="evenodd"
+                          d="M13.5 10a.5.5 0 01.5.5v2a.5.5 0 01-.5.5h-2a.5.5 0 010-1H13v-1.5a.5.5 0 01.5-.5z"
+                          clip-rule="evenodd"/>
+                    <path fill-rule="evenodd" d="M13 12.5a.5.5 0 01.5-.5h2a.5.5 0 010 1H14v1.5a.5.5 0 01-1 0v-2z"
+                          clip-rule="evenodd"/>
+                </svg>
+                <span class="text-left">Publish </span>
+            </h2>
+            <hr>
+            <form action="/publish" method="post">
+                <input type="hidden" name="id" th:value="${id}">
+                <div class="form-group">
+                        <span>
+                            <label for="title">Question title:</label>
+                            <input type="text" class="form-control" id="title" name="title" th:value="${title}"
+                                   aria-label="Default" aria-describedby="inputGroup-sizing-default"
+                                   placeholder="Question title...">
+                            <div class="dropdown">
+                              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Choose Category
+                              </button>
+                              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item">Intellij</a>
+                                <a class="dropdown-item">Maven</a>
+                                <a class="dropdown-item">Spring boot</a>
+                              </div>
+                            </div>
+                        </span>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Question Description:</label>
+                    <div id="test-editor">
+                        <textarea style="display:none;" type="text" class="form-control" id="description" name="description"
+                                  th:text="${description}" aria-label="Default" cols="30" rows="10">
+                        </textarea>
+                    </div>
+
+                    <script type="text/javascript">
+                        $(function() {
+                            var editor = editormd("test-editor", {
+                                width  : "100%",
+                                height : "300px",
+                                path   : "/editormd/lib/",
+                                watch : false,
+                                imageUpload    : true,
+                                imageFormats   : ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+                                imageUploadURL : "/file/upload",
+                            });
+                        });
+                    </script>
+
+                </div>
+
+                <div class="form-group">
+                    <label for="tag">Question Tag:</label>
+                    <input type="text" class="form-control" id="tag" name="tag" th:value="${tag}" aria-label="Default"
+                           aria-describedby="inputGroup-sizing-default" placeholder="input tag, seperated by ','">
+                    <div id="select-tag" onclick="showSelectTag()">
+                        <ul class="nav nav-tabs m-2" role="tablist">
+                            <li role="presentation" th:each="selectCategory,selectCategoryStat: ${tagDTOs}"
+                                th:class="${selectCategoryStat.first ? 'active':''}">
+                                <a th:href="${'#'+selectCategory.category}" aria-controls="home" role="tab"
+                                   data-toggle="tab" th:text="${selectCategory.category}"></a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div role="tabpanel" th:id="${selectCategory.category}"
+                                 th:each="selectCategory: ${tagDTOs}"
+                                 th:class="${selectCategoryStat.first ? 'active tab-pane':'tab-pane'}">
+                                <span>
+                                    <span class="label label-info m-2" th:each="selectT: ${selectCategory.categoryTags}">
+                                        <svg class="bi bi-tag-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                          <path fill-rule="evenodd" d="M2 1a1 1 0 00-1 1v4.586a1 1 0 00.293.707l7 7a1 1 0 001.414 0l4.586-4.586a1 1 0 000-1.414l-7-7A1 1 0 006.586 1H2zm4 3.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" clip-rule="evenodd"/>
+                                        </svg>
+                                        <span onclick="selectTag(this)"
+                                              th:data-tag="${selectT}"
+                                              th:text="${' '+selectT}">
+                                        </span>
+                                </span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="container-fluid container-question">
+                    <div class="row">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <span class="alert alert-danger col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                                  th:text="${error}" th:if="${error != null}"></span>
+                            <button type="submit" class="btn btn-success btn-publish pull-right">Publish</button>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </form>
+
+
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            Question Description:<br/>
+            Please use brief sentence to describe your question(no more than 25 words)<br/>
+            Question Detail:<br/>
+            Please describe your question in details, please use understandable words and provide related
+            background.<br/>
+            Question Tags:<br/>
+            Please tag the question properly, can use several tags seperated by "," and each is no more than 10
+            words.<br/>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

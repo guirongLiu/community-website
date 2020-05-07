@@ -1,0 +1,1 @@
+alter table notification drop column comment_id;

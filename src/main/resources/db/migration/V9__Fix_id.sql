@@ -1,0 +1,3 @@
+ALTER TABLE question CHANGE id id bigint AUTO_INCREMENT;
+ALTER TABLE user CHANGE id id bigint AUTO_INCREMENT;
+ALTER TABLE comment CHANGE id id bigint AUTO_INCREMENT;

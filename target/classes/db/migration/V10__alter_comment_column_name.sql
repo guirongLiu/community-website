@@ -1,0 +1,1 @@
+alter table comment change cotent content varchar(1024);

@@ -1,0 +1,1 @@
+alter table notification change notified_user_name notifier_name varchar(50) not null;
