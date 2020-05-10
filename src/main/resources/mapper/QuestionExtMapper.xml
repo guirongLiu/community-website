@@ -127,4 +127,12 @@
     from question
     where id != #{id,jdbcType=INTEGER} and tag regexp #{tag}
   </select>
+
+  <select id="selectSearch" parameterType="com.example.springblog.Model.Question" resultMap="BaseResultMap">
+
+    select
+    *
+    from question
+    where title regexp #{title}
+  </select>
 </mapper>

@@ -131,12 +131,12 @@
                             <div class="media-left">
                                 <a href="#">
                                     <img class="media-object img-rounded user-img" id="above-reply"
-                                         th:src="${questionDTO.user.avatarUrl}">
+                                         th:src="${session.user!= null? session.user.avatarUrl:'/img/user.svg'}">
                                 </a>
                             </div>
                             <div class="media-body">
                                 <h4 class="media-heading">
-                                    <a th:text="${questionDTO.user.name}"></a>
+                                    <a th:text="${session.user!= null? session.user.name: 'anonymous'}"></a>
                                 </h4>
                             </div>
                         </div>
@@ -171,12 +171,8 @@
                                 <h4 class="media-heading">
                                     <a th:text="${questionDTO.user.name}"></a>
                                 </h4>
-                                <span th:text="${questionDTO.description}"></span><br/>
-                                <span id="index-description">
-                                    <span th:text="${questionDTO.commentCount}"></span> replies,
-                                    <span th:text="${questionDTO.viewCount}"></span> views,
-                                    <span th:text="${#dates.format(questionDTO.gmtCreate,'yyyy-MM-dd HH:mm')}"></span></span>
                             </div>
+
                         </div>
                     </div>
                 </div>

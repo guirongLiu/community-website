@@ -20,6 +20,7 @@ public class UserService {
         userExample.createCriteria()
                 .andAccountIdEqualTo(String.valueOf(githubUser.getId()));
         List<User> users =userMapper.selectByExample(userExample);
+        //System.out.println(users.size());
         if (users.size() == 0){
             User user = new User();
             user.setName(githubUser.getName());
@@ -39,7 +40,7 @@ public class UserService {
             UserExample example = new UserExample();
             example.createCriteria()
                     .andIdEqualTo(users.get(0).getId());
-            userMapper.updateByExampleSelective(user,new UserExample());
+            userMapper.updateByExampleSelective(user,example);
 
         }
     }

@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,21 @@ public class QuestionService {
     @Autowired
     private QuestionMapper questionMapper;
 
-    public PaginationDTO<QuestionDTO> getList(Integer page, Integer size) {
+    public PaginationDTO<QuestionDTO> getList(String search, Integer page, Integer size) {
+        if(!StringUtils.isBlank(search)){
+            String[] tags = StringUtils.split(search, " ");
+            search = Arrays.stream(tags).collect(Collectors.joining("|"));
+        }
+        Question question = new Question();
+        question.setTitle(search);
+        List<Question> questions = questionExtMapper.selectRelated(question);
+        List<QuestionDTO> questionDTOS = questions.stream().map(q->{
+            QuestionDTO newQuestionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(q, newQuestionDTO);
+            return newQuestionDTO;
+        }).collect(Collectors.toList());
+
+
         QuestionExample questionExample = new QuestionExample();
         Integer totalCount = (int) questionMapper.countByExample(questionExample);
         Integer totalPage = (totalCount % size == 0? totalCount/size:totalCount/size+1);

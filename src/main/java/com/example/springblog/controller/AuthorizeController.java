@@ -45,19 +45,19 @@ public class AuthorizeController {
         accessTokenDTO.setClient_id((clientId));
         accessTokenDTO.setClient_secret(clientSecret);
         accessTokenDTO.setState(state);
-        String accessToken = githubProvider.gerAccessToken(accessTokenDTO);
+        String accessToken = githubProvider.getAccessToken(accessTokenDTO);
         GithubUser githubUser = githubProvider.getUser(accessToken);
+        //return "redirect:/";
         if(githubUser != null) {
             String token = UUID.randomUUID().toString();
             userService.createOrUpdate(githubUser,token);
             //login successfully
             response.addCookie(new Cookie("token",token));
             request.getSession().setAttribute("user",githubUser);
-            return "redirect:/";
         }else{
             //login failure
-            return "redirect:/";//return "redirect:/";
         }
+        return "redirect:/";
         //System.out.println(user.getId()+" "+user.getName()+" "+user.getBio());
         //return "Index";
     }

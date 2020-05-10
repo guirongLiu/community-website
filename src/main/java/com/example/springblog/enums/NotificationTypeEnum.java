@@ -4,7 +4,7 @@ import com.example.springblog.Model.Notification;
 
 public enum NotificationTypeEnum {
     REPLY_COMMENT(1,"replied your question"),
-    REPLY_QUESTION(2,"replied your comment");
+    REPLY_QUESTION(2,"replied your comment to question");
     private int type;
     private String name;
 

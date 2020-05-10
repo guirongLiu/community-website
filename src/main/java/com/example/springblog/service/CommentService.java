@@ -52,11 +52,8 @@ public class CommentService {
 
         }
 
-        Notification notification = new Notification();
-        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
-        notification.setNotifier(comment.getCommentator());
-        notification.setType(comment.getType());
-        notification.setGmtCreate(comment.getGmtCreate());
+        commentMapper.insertSelective(comment);
+
 
         if(comment.getType() == CommentTypeEnum.COMMENT.getType()){
             Comment dbComment = commentMapper.selectByPrimaryKey((comment.getParentId()));
@@ -64,34 +61,53 @@ public class CommentService {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
 
-            //comment.setId(0L);
-            commentMapper.insertSelective(comment);
             dbComment.setCommentCount(1);
             commentExtMapper.incCommentCount(dbComment);
 
-            notification.setParentId(dbComment.getId());
-            notification.setNotifiedUserId(dbComment.getCommentator());
-            User parentUser = userMapper.selectByPrimaryKey(dbComment.getCommentator());
-            notification.setNotifierName(parentUser.getName());
-            notification.setParentTitle(dbComment.getContent());
+            Question question = questionMapper.selectByPrimaryKey(dbComment.getParentId());
+            if(question == null){
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
+
+            User commentator = userMapper.selectByPrimaryKey(comment.getCommentator());
+            if (comment.getCommentator() != dbComment.getCommentator()){
+
+                createNotification(comment,question.getId(),question.getTitle(),dbComment.getCommentator(),commentator.getName());
+            }
+            if(comment.getCommentator() != question.getCreator()){
+                createNotification(comment,question.getId(),question.getTitle(),question.getCreator(), commentator.getName());
+            }
+
+
         }else{
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
             if(question == null){
                 throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
             }
-            //comment.setId(0L);
-            commentMapper.insertSelective(comment);
+
             question.setCommentCount(1);
             questionExtMapper.incCommentCount(question);
 
-            notification.setParentId(question.getId());
-            notification.setNotifiedUserId(question.getCreator());
-            User parentUser = userMapper.selectByPrimaryKey(question.getCreator());
-            notification.setNotifierName(parentUser.getName());
-            notification.setParentTitle(question.getTitle());
-        }
-        notificationMapper.insert(notification);
 
+            User commentator = userMapper.selectByPrimaryKey(comment.getCommentator());
+            if(comment.getCommentator() != question.getCreator())
+                createNotification(comment,question.getId(),question.getTitle(),question.getCreator(), commentator.getName());
+        }
+
+
+    }
+
+    public void createNotification(Comment comment, Long questionId, String questionTitle, Long notifiedUserId, String notifierName){
+        Notification notification = new Notification();
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+        notification.setNotifier(comment.getCommentator());
+        notification.setType(comment.getType());
+        notification.setGmtCreate(comment.getGmtCreate());
+        notification.setNotifiedUserId(notifiedUserId);
+        notification.setNotifierName(notifierName);
+        notification.setParentId(questionId);
+        notification.setParentTitle(questionTitle);
+        notificationMapper.insert(notification);
     }
 
     public List<CommentDTO> getCommentsByTargetId(Long questionId,CommentTypeEnum type) {

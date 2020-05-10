@@ -46,7 +46,7 @@
                 {
                     action += "&callback=" + settings.uploadCallbackURL + "&dialog_id=editormd-image-dialog-" + guid;
                 }
-
+                console.log(imageLang.url+','+settings.imageUpload+','+imageLang.uploadButton);
                 var dialogContent = ( (settings.imageUpload) ? "<form action=\"" + action +"\" target=\"" + iframeName + "\" method=\"post\" enctype=\"multipart/form-data\" class=\"" + classPrefix + "form\">" : "<div class=\"" + classPrefix + "form\">" ) +
                                         ( (settings.imageUpload) ? "<iframe name=\"" + iframeName + "\" id=\"" + iframeName + "\" guid=\"" + guid + "\"></iframe>" : "" ) +
                                         "<label>" + imageLang.url + "</label>" +
@@ -85,7 +85,7 @@
                             var url  = this.find("[data-url]").val();
                             var alt  = this.find("[data-alt]").val();
                             var link = this.find("[data-link]").val();
-
+                            console.log(url);
                             if (url === "")
                             {
                                 alert(imageLang.imageURLEmpty);
@@ -152,13 +152,15 @@
 
                         var uploadIframe = document.getElementById(iframeName);
 
+                        console.log(uploadIframe);
                         uploadIframe.onload = function() {
 
                             loading(false);
 
                             var body = (uploadIframe.contentWindow ? uploadIframe.contentWindow : uploadIframe.contentDocument).document.body;
+                            console.log(body);
                             var json = (body.innerText) ? body.innerText : ( (body.textContent) ? body.textContent : null);
-
+                            console.log(json);
                             json = (typeof JSON.parse !== "undefined") ? JSON.parse(json) : eval("(" + json + ")");
 
                             if(!settings.crossDomainUpload)

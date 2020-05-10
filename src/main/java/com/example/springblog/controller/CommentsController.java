@@ -19,7 +19,7 @@ import java.util.List;
 @Controller
 public class CommentsController {
     @Autowired
-    private CommentService commentServie;
+    private CommentService commentService;
 
     @ResponseBody
     @RequestMapping(value="/comment", method = RequestMethod.POST)
@@ -41,7 +41,8 @@ public class CommentsController {
         comment.setGmtModified((comment.getGmtCreate()));
         comment.setCommentator(user.getId());
         comment.setLikeCount(0L);
-        commentServie.insert(comment);
+        comment.setCommentCount(0);
+        commentService.insert(comment);
         return ResultDTO.okOf();
 
     }
@@ -49,7 +50,7 @@ public class CommentsController {
     @ResponseBody
     @RequestMapping(value="/comment/{id}", method = RequestMethod.GET)
     public ResultDTO<List<CommentDTO>> secondComments(@PathVariable(name = "id") Long id){
-        List<CommentDTO> secCommentDTOs = commentServie.getCommentsByTargetId(id, CommentTypeEnum.COMMENT);
+        List<CommentDTO> secCommentDTOs = commentService.getCommentsByTargetId(id, CommentTypeEnum.COMMENT);
         return ResultDTO.okOf(secCommentDTOs);
     }
 }
