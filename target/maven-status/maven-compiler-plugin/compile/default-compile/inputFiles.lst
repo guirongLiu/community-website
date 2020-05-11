@@ -24,6 +24,7 @@
 /Users/guirongliu/workspace/sprint_project/community/src/main/java/com/example/springblog/dto/CommentDTO.java
 /Users/guirongliu/workspace/sprint_project/community/src/main/java/com/example/springblog/service/UserService.java
 /Users/guirongliu/workspace/sprint_project/community/src/main/java/com/example/springblog/dto/PaginationDTO.java
+/Users/guirongliu/workspace/sprint_project/community/src/main/java/com/example/springblog/dto/QuestionQueryDTO.java
 /Users/guirongliu/workspace/sprint_project/community/src/main/java/com/example/springblog/Model/User.java
 /Users/guirongliu/workspace/sprint_project/community/src/main/java/com/example/springblog/Model/NotificationExample.java
 /Users/guirongliu/workspace/sprint_project/community/src/main/java/com/example/springblog/controller/AuthorizeController.java

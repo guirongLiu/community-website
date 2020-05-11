@@ -6,6 +6,7 @@ import com.example.springblog.Model.User;
 import com.example.springblog.Model.UserExample;
 import com.example.springblog.dto.PaginationDTO;
 import com.example.springblog.dto.QuestionDTO;
+import com.example.springblog.dto.QuestionQueryDTO;
 import com.example.springblog.exception.CustomizeErrorCode;
 import com.example.springblog.exception.CustomizeException;
 import com.example.springblog.mapper.QuestionExtMapper;
@@ -36,21 +37,13 @@ public class QuestionService {
 
     public PaginationDTO<QuestionDTO> getList(String search, Integer page, Integer size) {
         if(!StringUtils.isBlank(search)){
+            search = search.trim();
             String[] tags = StringUtils.split(search, " ");
             search = Arrays.stream(tags).collect(Collectors.joining("|"));
         }
-        Question question = new Question();
-        question.setTitle(search);
-        List<Question> questions = questionExtMapper.selectRelated(question);
-        List<QuestionDTO> questionDTOS = questions.stream().map(q->{
-            QuestionDTO newQuestionDTO = new QuestionDTO();
-            BeanUtils.copyProperties(q, newQuestionDTO);
-            return newQuestionDTO;
-        }).collect(Collectors.toList());
-
-
-        QuestionExample questionExample = new QuestionExample();
-        Integer totalCount = (int) questionMapper.countByExample(questionExample);
+        QuestionQueryDTO questionQueryDTO= new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+        Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
         Integer totalPage = (totalCount % size == 0? totalCount/size:totalCount/size+1);
 
         if (page<1)
@@ -59,9 +52,9 @@ public class QuestionService {
             page=totalPage;
 
         Integer offset = size*(page-1);
-        QuestionExample newQuestionExample = new QuestionExample();
-        newQuestionExample.setOrderByClause("gmt_create desc");
-        List<Question> questions = questionMapper.selectByExampleWithRowbounds( newQuestionExample, new RowBounds(offset,size));
+        questionQueryDTO.setOffset(offset);
+        questionQueryDTO.setSize(size);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);//questionMapper.selectByExampleWithRowbounds( newQuestionExample, new RowBounds(offset,size));
         List<QuestionDTO> questionDTOS = new ArrayList<>();
 
         PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO<>();

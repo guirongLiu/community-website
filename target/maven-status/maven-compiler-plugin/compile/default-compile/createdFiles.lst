@@ -16,6 +16,7 @@ com/example/springblog/controller/IndexController.class
 com/example/springblog/exception/CustomizeErrorCode.class
 com/example/springblog/dto/GithubUser.class
 com/example/springblog/Model/QuestionExample.class
+com/example/springblog/dto/QuestionQueryDTO.class
 com/example/springblog/service/IAzureStorageService.class
 com/example/springblog/exception/ICustomizeErrorCode.class
 com/example/springblog/Model/QuestionExample$GeneratedCriteria.class
